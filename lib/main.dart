@@ -14,7 +14,9 @@ class GenesisReader extends StatelessWidget {
         primaryColor: Color(0xff121212),
         accentColor: Color(0xff00d3a9),
         textTheme: GoogleFonts.poppinsTextTheme(
-          Theme.of(context).textTheme,
+          Theme.of(context).textTheme.apply(
+            bodyColor: Colors.white
+          )
         )
       ),
       initialRoute: '/',
