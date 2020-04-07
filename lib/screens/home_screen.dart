@@ -1,8 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:genesis_reader/models/api_handler.dart';
+import 'package:genesis_reader/models/book_json_parser.dart';
 import '../components/downloaded_book_card.dart';
-import '../constants.dart';
+import '../components/search_result_list.dart';
+import '../models/json_parser.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  List<Book> bookData;
+  bool isLoading = true;
+  String searchString = '';
+
+  void getBookList(value) async {
+    bookData = await DataFetcher(query: value).booksData();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void getBook(bookTitle) async{
+    bookData = await DataFetcher(query: searchString).book(bookTitle);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void onSearch() {
+    if (searchString != '') {
+      setState(() {
+        isLoading = true;
+        getBookList(searchString);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +70,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       labelText: 'Search Books',
                     ),
+                    onChanged: (value) => searchString = value,
                   ),
                 ),
                 SizedBox(
@@ -42,17 +78,20 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: RaisedButton(
-                    padding: EdgeInsets.all(6.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    color: Color(0xff00D3A9),
-                    child: Icon(
-                      Icons.search,
-                      size: 35.0,
-                    ),
-                    onPressed: () {},
-                  ),
+                      padding: EdgeInsets.all(6.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      color: Color(0xff00D3A9),
+                      child: Icon(
+                        Icons.search,
+                        size: 35.0,
+                      ),
+                      onPressed: () {
+                        onSearch();
+                        print(bookData);
+                        FocusScope.of(context).requestFocus(new FocusNode());
+                      }),
                 )
               ],
             ),
@@ -64,92 +103,20 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             Text(
-              'Downloaded Books',
+              '${ bookData.length == 0 ? "No " : '' }Results for "$searchString"',
               textAlign: TextAlign.start,
               style: TextStyle(color: Colors.white38, fontSize: 15.0),
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: ListView(
-                  children: <Widget>[
-                    // DownloadedBookCard(
-                    //   bookTitle: 'Exploring Python',
-                    //   authors: 'Markus Nix',
-                    // ),
-                    Container(
-                      padding: EdgeInsets.all(15.0),
-                      decoration: BoxDecoration(
-                          color: Color(0xff232931),
-                          borderRadius: BorderRadius.circular(10.0)),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: <Widget>[
-                                  Text(
-                                    'Think Python',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15.0),
-                                    textAlign: TextAlign.left,
-                                  ),
-                                  Text(
-                                    'Allen B. Downey, Jason lmoa',
-                                    style: kDetailTextStyle,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Text('Publisher : ',
-                                          style: kDetailTextStyle),
-                                      Text('Orielly Press',
-                                          style: kDetailTextStyle)
-                                    ],
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Text('Pages : ', style: kDetailTextStyle),
-                                      Text('174', style: kDetailTextStyle)
-                                    ],
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Text('Year : ', style: kDetailTextStyle),
-                                      Text('2011', style: kDetailTextStyle)
-                                    ],
-                                  ),
-                                ]),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Icon(Icons.file_download),
-                                // SizedBox(
-                                //   height: 10.0,
-                                // ),
-                                Text('2 Mb', style: kDetailTextStyle),
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Extension :',
-                                      style: kDetailTextStyle,
-                                    ),
-                                    Text('pdf', style: kDetailTextStyle)
-                                  ],
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                padding: const EdgeInsets.only(top: 10.0),
+                child: bookData == null
+                    ? Center(
+                        child: Text('Search to get results'),
+                      )
+                    : isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : SearchResultList(bookData: bookData, onCardTap: getBook),
               ),
             )
           ],
