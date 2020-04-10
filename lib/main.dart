@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genesis_reader/screens/results_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/home_screen.dart';
 
@@ -14,14 +15,13 @@ class GenesisReader extends StatelessWidget {
         primaryColor: Color(0xff121212),
         accentColor: Color(0xff00d3a9),
         textTheme: GoogleFonts.poppinsTextTheme(
-          Theme.of(context).textTheme.apply(
-            bodyColor: Colors.white
-          )
-        )
+          Theme.of(context).textTheme.apply(bodyColor: Colors.white),
+        ),
       ),
       initialRoute: '/',
       routes: {
         '/': (context) => HomeScreen(),
+        '/search': (context) => ResultsScreen(),
       },
     );
   }

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import '../models/json_parser.dart';
-import '../components/search_result_card.dart';
+import '../services/json_parser.dart';
+import '../widgets/search_result_card.dart';
 
 
 class SearchResultList extends StatelessWidget {
-  SearchResultList({@required this.bookData, this.onCardTap});
+  SearchResultList({@required this.bookData, this.onCardTap, this.searchString});
 
   final List<Book> bookData;
   final Function onCardTap;
+  final String searchString;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class SearchResultList extends StatelessWidget {
             year: bookData[index].year,
             size: bookData[index].size,
             filetype: bookData[index].filetype,
-            onCardTap: onCardTap,
+            searchString: searchString,
           );
         });
   }

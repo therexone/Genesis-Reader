@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
+import 'download_dialog.dart';
 
 class SearchResultCard extends StatelessWidget {
   SearchResultCard(
@@ -10,7 +11,7 @@ class SearchResultCard extends StatelessWidget {
       this.year,
       this.filetype,
       this.size,
-      this.onCardTap
+      this.searchString
       });
 
   final String title;
@@ -20,13 +21,15 @@ class SearchResultCard extends StatelessWidget {
   final String year;
   final String filetype;
   final String size;
-  final Function onCardTap;
+  final String searchString;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        onCardTap(title);
+        showDialog(context: context, builder: (context) {
+          return DownloadDialog(title, authors, publisher, pages, size, filetype, year, searchString);
+        },);
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10.0),

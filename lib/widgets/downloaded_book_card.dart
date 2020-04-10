@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
-import 'package:http/http.dart' as http;
 
 class DownloadedBookCard extends StatelessWidget {
   DownloadedBookCard({this.bookTitle, this.authors});
