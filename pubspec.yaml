@@ -29,8 +29,7 @@ dependencies:
   permission_handler: ^5.0.0+hotfix.3
   http: ^0.12.0+4
   async: ^2.4.1
-
-
+  fluttertoast: ^4.0.1
 
 
   

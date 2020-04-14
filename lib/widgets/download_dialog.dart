@@ -1,13 +1,12 @@
-import 'dart:io';
 import 'package:async/async.dart';
 import 'package:dio/dio.dart';
 import 'package:file_utils/file_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:genesis_reader/services/api_handler.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../constants.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DownloadDialog extends StatefulWidget {
   final String title;
@@ -33,7 +32,6 @@ class _DownloadDialogState extends State<DownloadDialog> {
   var progress = "Download";
   double progressValue = 0.0;
   var path = "No Data";
-  Directory externalDir;
   var status = Permission.storage.status;
   bool isDisabled = false;
 
@@ -43,12 +41,8 @@ class _DownloadDialogState extends State<DownloadDialog> {
       await Permission.storage.request();
     }
     if (await Permission.storage.request().isGranted) {
-      String dirloc = "";
-      if (Platform.isAndroid) {
-        dirloc = "/sdcard/Genesis Reader/";
-      } else {
-        dirloc = (await getApplicationDocumentsDirectory()).path;
-      }
+      String dirloc = "/sdcard/Genesis Reader/";
+
       try {
         FileUtils.mkdir([dirloc]);
         await dio.download(url, '$dirloc${widget.title}.${widget.filetype}',
@@ -58,28 +52,38 @@ class _DownloadDialogState extends State<DownloadDialog> {
                 ((receivedBytes / totalBytes) * 100).toStringAsFixed(0) + "%";
             progressValue = receivedBytes / totalBytes;
           });
-        });
+        }, deleteOnError: true);
       } catch (e) {
         print(e);
       }
       setState(() {
         downloading = false;
         progress = "Download Completed.";
-        path = '$dirloc${widget.title}.${widget.filetype}';
         isDisabled = true;
+        path = '$dirloc${widget.title}.${widget.filetype}';
+        Fluttertoast.showToast(
+            msg: "File saved at $path",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Color(0xff00D3A9),
+            textColor: Colors.white,
+            fontSize: 16.0);
       });
     } else {
       progress = "Permission Denied!";
     }
   }
 
-  Future getDownloadLink() async {
-    return this._memoizer.runOnce(() async {
-      var bookDl =
-          await DataFetcher(query: widget.searchString).bookDl(widget.title);
-      return bookDl;
-    });
-  }
+  final _bookCache = AsyncCache(Duration(minutes: 10));
+
+  Future getDownloadLink() => _bookCache.fetch(() async {
+        return this._memoizer.runOnce(() async {
+          var bookDl = await DataFetcher(query: widget.searchString)
+              .bookDl(widget.title);
+          return bookDl;
+        });
+      });
+
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +181,7 @@ class _DownloadDialogState extends State<DownloadDialog> {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: <Widget>[
                                 Text(
-                                  'Downloading..',
+                                  'Downloading.. ${(progressValue * 100).toStringAsFixed(0)  ?? ""}',
                                   style: TextStyle(
                                       fontSize: 10.0,
                                       fontWeight: FontWeight.w100,

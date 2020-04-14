@@ -3,7 +3,9 @@ import 'package:genesis_reader/screens/results_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/home_screen.dart';
 
-void main() => runApp(GenesisReader());
+void main() {
+  runApp(GenesisReader());
+}
 
 class GenesisReader extends StatelessWidget {
   @override
