@@ -1,6 +1,5 @@
 import 'dart:io';
-// import 'package:epub_kitty/epub_kitty.dart';
-import 'package:path/path.dart' as p;
+// import 'package:path/path.dart' as p;
 import 'package:flutter/material.dart';
 import 'package:genesis_reader/widgets/search_bar.dart';
 import '../widgets/downloaded_book_card.dart';
@@ -16,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isDirectoryExistent = false;
   List bookPaths = [];
 
-  final RegExp re = RegExp(r'(?<=Reader\/)(.*)(?=\.epub)');
+  final RegExp re = RegExp(r'(?<=Reader\/)(.*)(?=\.)');
 
   @override
   void initState() {
@@ -33,18 +32,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void getFilePaths() {
-    bookPaths = booksDir.listSync(recursive: true).map((file){
+    bookPaths = booksDir.listSync(recursive: true).map((file) {
       // if(p.extension(file.path) == '.epub')
       return file.path;
     }).toList();
-    booksDir.watch(events: FileSystemEvent.all).listen((event) {
-      print(event.path);
-    });
+    // booksDir.watch(events: FileSystemEvent.all).listen((event) {
+    //   print(event.path);
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(bookPaths);
     return BaseScaffold(
       subHeading: 'Downloaded Books',
       searchWidget: SearchBar(),
@@ -57,7 +55,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               itemCount: bookPaths.length,
               itemBuilder: (context, index) => DownloadedBookCard(
-                  bookTitle: re.firstMatch(bookPaths[index]).group(0)),
+                bookTitle: re.firstMatch(bookPaths[index]).group(0),
+                path: bookPaths[index],
+              ),
             )
           : NoBooks(),
     );

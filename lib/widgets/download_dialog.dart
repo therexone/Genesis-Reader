@@ -71,6 +71,13 @@ class _DownloadDialogState extends State<DownloadDialog> {
       });
     } else {
       progress = "Permission Denied!";
+      Fluttertoast.showToast(
+          msg: "Download",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Color(0xffFF7060),
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 
@@ -83,7 +90,6 @@ class _DownloadDialogState extends State<DownloadDialog> {
           return bookDl;
         });
       });
-
 
   @override
   Widget build(BuildContext context) {
@@ -180,13 +186,28 @@ class _DownloadDialogState extends State<DownloadDialog> {
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: <Widget>[
-                                Text(
-                                  'Downloading.. ${(progressValue * 100).toStringAsFixed(0)  ?? ""}',
-                                  style: TextStyle(
-                                      fontSize: 10.0,
-                                      fontWeight: FontWeight.w100,
-                                      color: Colors.white38),
-                                  textAlign: TextAlign.end,
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      'Downloading',
+                                      style: TextStyle(
+                                          fontSize: 10.0,
+                                          fontWeight: FontWeight.w100,
+                                          color: Colors.white38),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                    Text(
+                                      '${(progressValue * 100).toStringAsFixed(0) ?? "0"}%',
+                                      style: TextStyle(
+                                          fontSize: 10.0,
+                                          fontWeight: FontWeight.w100,
+                                          color: Colors.white38),
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ],
                                 ),
                                 LinearProgressIndicator(
                                   semanticsLabel: progress,

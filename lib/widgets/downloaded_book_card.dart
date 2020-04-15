@@ -1,35 +1,42 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
+// import 'package:epub/epub.dart';
+import 'package:open_file/open_file.dart';
 
 class DownloadedBookCard extends StatelessWidget {
-  DownloadedBookCard({this.bookTitle});
+  DownloadedBookCard({this.bookTitle, this.path});
 
   final String bookTitle;
+  final String path;
+
   final List<LinearGradient> gradients = [
-    // Gradients.aliHussien,
-    // Gradients.backToFuture,
-    // Gradients.blush,
-    // Gradients.byDesign,
-    // Gradients.cosmicFusion,
-    // Gradients.coldLinear,
     Gradients.deepSpace,
     Gradients.tameer,
     Gradients.taitanum,
     Gradients.rainbowBlue,
     Gradients.hotLinear,
   ];
+
   final int randomNumber = Random().nextInt(5);
+
+  // EpubBook book;
+
+  // void getEbook() async {
+  //   var file = File(
+  //       '/sdcard/Genesis Reader/Coaching Clues Real Stories Powerful Solutions Practical Tools.epub');
+  //   List<int> bytes = await file.readAsBytes();
+  //   book = await EpubReader.readBook(bytes);
+  // }
 
   @override
   Widget build(BuildContext context) {
-    print(randomNumber);
+    // print(randomNumber);
     return InkWell(
-      onTap: (){
-        
+      onTap: () {
+        OpenFile.open(path, type: "application/pdf" );
       },
-          child: GradientCard(
+      child: GradientCard(
         margin: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -48,10 +55,6 @@ class DownloadedBookCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // Text(k
-              //   'Markus Nix   ',
-              //   style: TextStyle(fontWeight: FontWeight.w200),
-              // ),
             ],
           ),
         ),
