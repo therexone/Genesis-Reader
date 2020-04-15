@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:genesis_reader/constants.dart';
 import 'package:url_launcher/url_launcher.dart' as url;
 
-
 class BaseScaffold extends StatelessWidget {
   BaseScaffold({this.subHeading, this.mainWidget, this.searchWidget});
 
@@ -65,7 +64,7 @@ class BaseScaffold extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 onTap: () {
-                  
+                  url.launch('https://en.wikipedia.org/wiki/Library_Genesis');
                 },
               ),
               ListTile(
@@ -74,13 +73,12 @@ class BaseScaffold extends StatelessWidget {
                   style: TextStyle(color: Colors.white60),
                   textAlign: TextAlign.center,
                 ),
-                onTap: () => {
-                  url.launch('https://github.com/therexone/libgen-api')
-                },
+                onTap: () =>
+                    {url.launch('https://github.com/therexone/libgen-api')},
               ),
               InkWell(
-                onTap: (){
-                  // launch();
+                onTap: () {
+                  url.launch('https://github.com/therexone/');
                 },
                 child: Container(
                   padding:
