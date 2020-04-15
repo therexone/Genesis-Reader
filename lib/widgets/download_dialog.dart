@@ -84,8 +84,7 @@ class _DownloadDialogState extends State<DownloadDialog> {
               fontSize: 16.0);
         });
       } else {
-        bool removed = FileUtils.rm([path]);
-        print(removed);
+        File(apparentPath).deleteSync();
         Fluttertoast.showToast(
             msg: "Download Failed",
             toastLength: Toast.LENGTH_LONG,
