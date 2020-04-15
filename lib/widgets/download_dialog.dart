@@ -56,23 +56,25 @@ class _DownloadDialogState extends State<DownloadDialog> {
       } catch (e) {
         print(e);
       }
-      setState(() {
-        downloading = false;
-        progress = "Download Completed.";
-        isDisabled = true;
-        path = '$dirloc${widget.title}.${widget.filetype}';
-        Fluttertoast.showToast(
-            msg: "File saved at $path",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Color(0xff00D3A9),
-            textColor: Colors.white,
-            fontSize: 16.0);
-      });
+      if (mounted) {
+        setState(() {
+          downloading = false;
+          progress = "Download Completed.";
+          isDisabled = true;
+          path = '$dirloc${widget.title}.${widget.filetype}';
+          Fluttertoast.showToast(
+              msg: "File saved at $path",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Color(0xff00D3A9),
+              textColor: Colors.white,
+              fontSize: 16.0);
+        });
+      }
     } else {
       progress = "Permission Denied!";
       Fluttertoast.showToast(
-          msg: "Download",
+          msg: "Download Failed",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Color(0xffFF7060),
