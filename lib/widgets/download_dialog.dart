@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:async/async.dart';
 import 'package:dio/dio.dart';
 import 'package:file_utils/file_utils.dart';
@@ -42,21 +44,32 @@ class _DownloadDialogState extends State<DownloadDialog> {
     }
     if (await Permission.storage.request().isGranted) {
       String dirloc = "/sdcard/Genesis Reader/";
-
-      try {
-        FileUtils.mkdir([dirloc]);
-        await dio.download(url, '$dirloc${widget.title}.${widget.filetype}',
-            onReceiveProgress: (receivedBytes, totalBytes) {
-          setState(() {
-            progress =
-                ((receivedBytes / totalBytes) * 100).toStringAsFixed(0) + "%";
-            progressValue = receivedBytes / totalBytes;
-          });
-        }, deleteOnError: true);
-      } catch (e) {
-        print(e);
+      String apparentPath = '$dirloc${widget.title}.${widget.filetype}';
+      if (!await File(apparentPath).exists()) {
+        try {
+          FileUtils.mkdir([dirloc]);
+          await dio.download(url, apparentPath,
+              onReceiveProgress: (receivedBytes, totalBytes) {
+            setState(() {
+              progress =
+                  ((receivedBytes / totalBytes) * 100).toStringAsFixed(0) + "%";
+              progressValue = receivedBytes / totalBytes;
+            });
+          }, deleteOnError: true);
+        } catch (e) {
+          print(e);
+        }
       }
-      if (mounted) {
+      else if (await File(apparentPath).exists()){
+        setState(() {
+          downloading = false;
+          progress = "File already Downloaded";
+          isDisabled = true;
+        });
+        return;
+      }
+
+      if (mounted && progressValue == 1.0) {
         setState(() {
           downloading = false;
           progress = "Download Completed.";
@@ -70,11 +83,21 @@ class _DownloadDialogState extends State<DownloadDialog> {
               textColor: Colors.white,
               fontSize: 16.0);
         });
+      } else {
+        bool removed = FileUtils.rm([path]);
+        print(removed);
+        Fluttertoast.showToast(
+            msg: "Download Failed",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Color(0xff00D3A9),
+            textColor: Colors.white,
+            fontSize: 16.0);
       }
     } else {
       progress = "Permission Denied!";
       Fluttertoast.showToast(
-          msg: "Download Failed",
+          msg: "No Storage Permission",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Color(0xffFF7060),

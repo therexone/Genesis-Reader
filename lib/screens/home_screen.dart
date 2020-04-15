@@ -1,6 +1,7 @@
 import 'dart:io';
 // import 'package:path/path.dart' as p;
 import 'package:flutter/material.dart';
+import 'package:genesis_reader/widgets/no_books.dart';
 import 'package:genesis_reader/widgets/search_bar.dart';
 import '../widgets/downloaded_book_card.dart';
 import '../widgets/base_scaffold.dart';
@@ -59,62 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 path: bookPaths[index],
               ),
             )
-          : NoBooks(),
+          : NoBooks(helpText: 'Downloaded Books will appear here.',),
     );
   }
 }
 
-class NoBooks extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        children: <Widget>[
-          Center(
-              child: Opacity(
-            child: Image.asset(
-              'assets/images/404.png',
-            ),
-            opacity: 0.2,
-          )),
-          Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'No Books found.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 5.0,
-              ),
-              Text('Downloaded Books (.epub) will appear here',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white54)),
-            ],
-          )),
-        ],
-      ),
-    );
-  }
-}
-
-//  Widget build(BuildContext context) {
-// void getBookPaths() {
-//     booksDir.exists().then((isThere) {
-//       if (isThere) {
-//         isDirectoryExistent = true;
-//         var paths = booksDir
-//             .listSync()
-//             .where((element) => p.extension(element.path) == '.epub')
-//             .toList();
-//         paths.forEach((element) {
-//           if (!bookPaths.contains(element.path)) {
-//             bookPaths.add(element.path);
-//           }
-//         });
-
-//       }
-//     });
-//   }

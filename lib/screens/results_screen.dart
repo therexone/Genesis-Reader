@@ -2,6 +2,7 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:genesis_reader/services/api_handler.dart';
 import 'package:genesis_reader/services/json_parser.dart';
+import 'package:genesis_reader/widgets/no_books.dart';
 import '../widgets/base_scaffold.dart';
 import '../widgets/search_result_list.dart';
 
@@ -26,22 +27,7 @@ class ResultsScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return snapshot.data.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.info,
-                          color: Color(0xbbffffff),
-                          size: 60.0,
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text('No Results found')
-                      ],
-                    ),
-                  )
+                ? NoBooks(helpText: 'Try a different search combination',)
                 : SearchResultList(
                     bookData: snapshot.data,
                     searchString: searchString,
