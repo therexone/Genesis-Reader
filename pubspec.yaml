@@ -32,6 +32,8 @@ dependencies:
   fluttertoast: ^4.0.1
   # epub: ^2.1.0
   open_file: ^3.0.1
+  url_launcher: ^5.4.2
+
 
 
 

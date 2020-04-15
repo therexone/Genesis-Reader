@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:genesis_reader/screens/disclaimer.dart';
 import 'package:genesis_reader/screens/results_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/home_screen.dart';
@@ -28,6 +29,7 @@ class GenesisReader extends StatelessWidget {
       routes: {
         '/': (context) => HomeScreen(),
         '/search': (context) => ResultsScreen(),
+        '/disclaimer' : (context) => Disclaimer(),
       },
     );
   }
