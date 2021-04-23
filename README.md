@@ -1,4 +1,5 @@
 # Genesis Reader
+_Not maintained anymore_
 
 An ebook reader(in development) and downloader app written in flutter that fetches ebooks from library Genesis.
 
